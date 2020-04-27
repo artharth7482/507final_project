@@ -5,6 +5,7 @@ import json
 import csv
 import pandas
 import sqlite3
+from datetime import datetime
 
 def load_cache(cache_file_name): # called only once, when we run the program
     try:
@@ -40,18 +41,20 @@ headers = {
     'Course-Info': 'https://www.si.umich.edu/programs/courses/507'
 }
 
-
+###################################
 #### CRAWLING ATP PLAYERS DATA ####
+###################################
 
+## Setting
 PLAYER_BASEURL = 'https://www.atptour.com'
 RANKING_DETAILED_URL = '/rankings/singles'
 PLAYER_CACHE_FILE_NAME = 'player_cache.json'
 PLAYER_CACHE_DICT = {}
 
-# Load the cache, save in global variable
+## Load the cache, save in global variable
 PLAYER_CACHE_DICT = load_cache(PLAYER_CACHE_FILE_NAME)
 
-#class player:
+## class player:
 NEWEST_DATE_PARENT_TAG = 'div'
 NEWEST_DATE_PARENT_CLASS = 'dropdown-wrapper'
 NEWEST_DATE_TAG = 'div'
@@ -74,13 +77,14 @@ PLAYER_WEIGHT_TAG = 'span'
 PLAYER_WEIGHT_CLASS = 'table-weight-lbs'
 PLAYER_HEIGHT_TAG = 'span'
 PLAYER_HEIGHT_CLASS = 'table-height-ft'
-PLAYER_PLAYS_GRANDPARENT_TAG = 'tr' # the second one
-PLAYER_PLAYS_PARENT_TAG = 'td' # the third one
+PLAYER_PLAYS_GRANDPARENT_TAG = 'tr' # pick the second one
+PLAYER_PLAYS_PARENT_TAG = 'td' # pick the third one
 PLAYER_PLAYS_TAG = 'div'
 PLAYER_PLAYS_CLASS = 'table-value'
 PLAYER_GEAR_PARENT_TAG = 'div'
 PLAYER_GEAR_PARENT_CLASS = 'players-equipment-item'
 PLAYER_GEAR_NAME_TAG = 'h3'
+PLAYER_GEAR_NAME_CLASS = 'equipment-item-name'
 PLAYER_GEAR_IMAGE_TAG = 'img'
 
 ## Make the soup for the main page
@@ -147,35 +151,41 @@ for i in range(17):
         except AttributeError:
             plays = None
 
-        ## extract player's gear names and images
-        gear_dict = {}
-        gear_image_dict = {}
-        try:
-            player_gear_parent = player_soup.find_all(PLAYER_GEAR_PARENT_TAG,class_=PLAYER_GEAR_PARENT_CLASS)
-            #gear name
-            for i in range(3):
-                try:
-                    gear_name = player_gear_parent[i].find(PLAYER_GEAR_NAME_TAG)
-                    gear_dict[i] = gear_name.text.strip()
-                except IndexError:
-                    gear_dict[i] = None
+        # extract player's gear names and images
+        gear_dict = {0:None,1:None,2:None}
+        gear_image_dict = {0:None,1:None,2:None}
+        player_gear_parent = player_soup.find_all(PLAYER_GEAR_PARENT_TAG,class_=PLAYER_GEAR_PARENT_CLASS)
+        for i in range(3):
+            
+            # gear name
+            try:
+                gear_name = player_gear_parent[i].find(PLAYER_GEAR_NAME_TAG,class_=PLAYER_GEAR_NAME_CLASS)
+                gear_dict[i] = gear_name.text.strip()
+            except (AttributeError,IndexError):
+                pass
+            
             #gear image
-                try:
-                    gear_image = player_gear_parent.find(PLAYER_GEAR_IMAGE_TAG)
-                    gear_image_dict[i] = PLAYER_BASEURL + gear_image['src']
-                except IndexError:
-                    gear_image_dict[i] = None
-        except AttributeError:
-            for i in range(3):
-                gear_dict[i] = None
-                gear_image_dict[i] = None
+            try:
+                gear_image = player_gear_parent[i].find(PLAYER_GEAR_IMAGE_TAG)
+                gear_image_dict[i] = PLAYER_BASEURL + gear_image['src']
+            except (AttributeError,IndexError):
+                pass
+        
+        ## create a name_code for match table's reference
+        if '-' in first_name:
+            firstname_abbrev = first_name.split('-')[0][0] + '.' + first_name.split('-')[1][0] + '.'
+        else:
+            firstname_abbrev = first_name[0] + '.'
+        name_code = last_name + ' ' + firstname_abbrev
+        
+        ## put all the data into the dictionary
+        player_dict[rank] = [last_name, first_name, rank, country, age, height, weight, plays, gear_dict[0], gear_image_dict[0], gear_dict[1], gear_image_dict[1], gear_dict[2], gear_image_dict[2],name_code]
 
-    ## put all the data into the dictionary
-        player_dict[rank] = [last_name, first_name, rank, country, age, height, weight, plays, gear_dict[0], gear_image_dict[0], gear_dict[1], gear_image_dict[1], gear_dict[2], gear_image_dict[2]]
-
-
+###########################
 #### Load matches data ####
-file_contents = open('df_atp.csv', 'r')
+###########################
+
+file_contents = open('df_atp.csv', 'r',encoding='utf-8',errors='ignore')
 csv_reader = csv.reader(file_contents)
 next(csv_reader)
 
@@ -185,7 +195,6 @@ cur = conn.cursor()
 
 drop_players_sql = 'DROP TABLE IF EXISTS "Players"'
 drop_matches_sql = 'DROP TABLE IF EXISTS "Matches"'
-
 
 create_players_sql = '''
     CREATE TABLE IF NOT EXISTS 'Players' (
@@ -203,7 +212,8 @@ create_players_sql = '''
         'Gear2' TEXT,
         'GearImage2' TEXT,
         'Gear3' TEXT,
-        'GearImage3' TEXT
+        'GearImage3' TEXT,
+        'NameCode' TEXT
     )
 '''
 
@@ -214,34 +224,62 @@ create_matches_sql = '''
         'Tournament' TEXT NOT NULL,
         'Location' TEXT NOT NULL,
         'Surface' TEXT NOT NULL,
-        'Date' INTEGER NOT NULL,
+        'Date' TEXT NOT NULL,
         'Round' TEXT NOT NULL,
         'BestOf' INTEGER NOT NULL,
-        'Winner' TEXT NOT NULL,
-        'Loser' TEXT NOT NULL
+        'Winner' TEXT,
+        'Loser' TEXT 
     )
 '''
+
 cur.execute(drop_players_sql)
 cur.execute(drop_matches_sql)
 cur.execute(create_players_sql)
 cur.execute(create_matches_sql)
 conn.commit()
 
-insert_players = '''
+insert_players_sql = '''
     INSERT INTO Players
-    VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 '''
 
-insert_matches = '''
+insert_matches_sql = '''
     INSERT INTO Matches
     VALUES (NULL,?,?,?,?,?,?,?,?,?)
 '''
 
+select_player_id_sql = '''
+    SELECT Id FROM Players
+    WHERE NameCode = ?
+'''
+
 for player in player_dict:
-    cur.execute(insert_players, player_dict[player])
+    cur.execute(insert_players_sql, player_dict[player])
 
 for row in csv_reader:
-    cur.execute(insert_matches,[
+    #change the date format
+    year, month, day = row[4].split('/')
+    if int(month) < 10:
+        month = '0' + month
+    if int(day) < 10:
+        day = '0' + day
+    row[4] = '-'.join((year,month,day))
+
+    # get Id for winner
+    cur.execute(select_player_id_sql, [row[7]])
+    res = cur.fetchone()
+    winner_id = None
+    if res is not None:
+        winner_id = res[0]
+
+    # get Id for loser
+    cur.execute(select_player_id_sql, [row[8]])
+    res = cur.fetchone()
+    loser_id = None
+    if res is not None:
+        loser_id = res[0]
+
+    cur.execute(insert_matches_sql,[
         row[0],
         row[1],
         row[2],
@@ -249,9 +287,9 @@ for row in csv_reader:
         row[4],
         row[5],
         row[6],
-        row[7],
-        row[8]
-    ])
+        winner_id,
+        loser_id
+    ])  
 
 conn.commit()
 conn.close()
