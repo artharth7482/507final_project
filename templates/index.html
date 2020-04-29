@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF8"/>
+    <title>ATP Fan Club</title>
+	<style>
+	.card {
+  	/* Add shadows to create the "card" effect */
+  	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  	transition: 0.3s;
+	width: 400px;
+	background-color: rgba(241,241,241,1.00);
+	display: block;
+	float: left;
+	margin-left: 20px;
+	}
+
+	/* Add some padding inside the card container */
+	.container {
+  	padding: 2px 16px;
+	}
+	
+	.option {
+	display: inline-block;
+	}
+		
+	</style>
+</head>
+<body>
+    <h1 style="color:crimson;font-size:80px;">Welcome to the ATP Fan Club!</h1>
+
+    <h2 style="font-size:50px;">
+    What are you looking for? <br/>
+    </h2>
+
+	<div class="option">
+	<div class="card"><a href='/player'>
+  	<div class="container">
+    <h3 style="font-size:40px"><b>Player Overview</b></h3>
+    <p style="font-size:30px">(Search single player)</p>
+	</div>
+	</a>
+	</div>
+		
+	<div class="card"><a href='/h2h'>
+  	<div class="container">
+    <h3 style="font-size:40px"><b>Head2Head Stats</b></h3>
+	<p style="font-size:30px">(Search two players)</p>
+  	</div>
+	<a>
+	</div>
+		
+	<div class="card"><a href='/random'>
+  	<div class="container">
+    <h3 style="font-size:40px"><b>Surprise</b></h3>
+	<p style="font-size:30px">(Explore a player)</p>
+  	</div>
+	<a>
+	</div>
+		
+	</div>
+	
+</body>
+</html>

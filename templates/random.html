@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>random</title>
+<style>
+	table,th,td{border:1px solid black;
+	border-collapse: collapse;
+	padding: 5px;}
+	
+	.gear {
+	display: flex;
+	}
+	
+	.info{
+	display:flex;
+	margin-right: 30px;
+	}
+	
+	.gear-item{
+	display: inline-block;
+	margin-right: 30px;
+	}
+</style>
+</head>
+
+<body>
+	<h1 style="color:crimson;font-size:80px;">{{player[1]}} {{player[2]}}</h1>
+	<div class=info>
+	<img src="{{player[0]}}"/>
+	<table>
+		<tr>
+		<td>Rank</td>
+		<td>{{player[3]}}</td>
+		</tr>
+		<tr>
+		<td>Country</td>
+		<td>{{player[4]}}</td>
+		</tr>
+		<tr>
+		<td>Age</td>
+		<td>{{player[5]}}</td>
+		</tr>
+		<tr>
+		<td>Height</td>
+		<td>{{player[6]}}</td>
+		</tr>
+		<tr>
+		<td>Weight</td>
+		<td>{{player[7]}}</td>
+		</tr>
+		<tr>
+		<td>Plays</td>
+		<td>{{player[8]}}</td>
+		</tr>
+	</table>
+	{% if player[9] != None %}
+	<h3 style="font-size:50px">{{player[1]}} {{player[2]}}'s gear</h3>
+	<div class=gear>
+	<div class=gear-item>
+	<h4>{{player[9]}}</h4>
+	<img src="{{player[10]}}"/>
+	</div>
+	{% endif %}
+	{% if player[11] != None %}
+	<div class=gear-item>
+	<h4>{{player[11]}}</h4>
+	<img src="{{player[12]}}"/>
+	</div>
+	{% endif %}
+	{% if player[13] != None %}
+	<div class=gear-item>
+	<h4>{{player[13]}}</h4>
+	<img src="{{player[14]}}"/>
+	</div>
+	</div>
+	{% endif %}
+	</div><br/>
+	<div class=Grand_slam>
+	<h3 style="font-size:50px">Grand Slam Performance</h3>
+		<table>
+		<tr>
+		<th>Australian Open</th>
+		<th>French Open</th>
+		<th>Wimbledon</th>
+		<th>US Open</th>
+		</tr>
+		<tr>
+		<td>{{results_au}}</td>
+		<td>{{results_fr}}</td>
+		<td>{{results_uk}}</td>
+		<td>{{results_us}}</td>
+		</tr>
+		</table>
+	</div>
+	<h4 stype="font-size: 30px">Return <a href='/'>Home</a></h4></br>
+</body>
+</html>

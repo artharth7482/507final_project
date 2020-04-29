@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>h2h_result</title>
+<style>
+	table,th,td{border:1px solid black;
+	border-collapse: collapse;
+	padding: 5px;}
+	
+	.card {
+  	/* Add shadows to create the "card" effect */
+  	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  	transition: 0.3s;
+	width: 500px;
+	background-color: rgba(241,241,241,1.00);
+	display: block;
+	float: left;
+	margin-left: 20px;
+	}
+
+	/* Add some padding inside the card container */
+	.container {
+  	padding: 2px 16px;
+	}
+	.content {
+	display: flex;
+	flex-direction: column;	
+	}
+</style>
+</head>
+
+<body>
+	<h1 style="font-size:30px">Here's Head2Head stats</h1>
+	<div class=content>
+	<div class=h2h>
+	<div class="card">
+  	<div class="container">
+	<h2 style="font-size:30px;">{{p1_fname}} {{p1_lname}}</h1>
+	<div>
+	<img src="{{p1_image}}"/>
+	<h3 style="color:crimson;font-size:40px;">{{p1_win}}</h2>
+	<h4 style="font-size:20px">Rank: {{p1_rank}}<br/>
+		Country: {{p1_country}}
+		</h3></br>
+	</div>
+	</div>
+	</div>
+	<div class="card">
+  	<div class="container">
+	<h2 style="font-size:30px;">{{p2_fname}} {{p2_lname}}</h1>
+	<div>
+	<img src="{{p2_image}}"/>
+	<h3 style="color:crimson;font-size:40px;">{{p2_win}}</h2>
+	<h4 style="font-size:20px">Rank: {{p2_rank}}<br/>
+		Country: {{p2_country}}
+		</h3></br>
+	</div>
+	</div>
+	</div>
+	</div><br/>
+	<div class=moreinfo>
+	<h4 stype="font-size: 30px">Return <a href='/'>Home</a></h4></br>
+	<h4 stype="font-size: 30px">Return <a href='/h2h'>Head2Head</a></h4>
+	</div>
+	</div>
+</body>
+</html>

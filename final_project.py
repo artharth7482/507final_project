@@ -5,7 +5,6 @@ import json
 import csv
 import pandas
 import sqlite3
-from datetime import datetime
 
 def load_cache(cache_file_name): # called only once, when we run the program
     try:
@@ -59,6 +58,9 @@ NEWEST_DATE_PARENT_TAG = 'div'
 NEWEST_DATE_PARENT_CLASS = 'dropdown-wrapper'
 NEWEST_DATE_TAG = 'div'
 NEWEST_DATE_CLASS = 'dropdown-label'
+PLAYER_IMAGE_PARENT_TAG = 'div'
+PLAYER_IMAGE_PARENT_CLASS = 'player-profile-hero-image'
+PLAYER_IMAGE_TAG = 'img'
 PLAYER_BODY_TAG = 'tbody'
 PLAYER_PARENT_TAG = 'tr'
 PLAYER_RANK_CLASS = 'rank-cell'
@@ -125,6 +127,13 @@ for i in range(17):
         ## extract player's rank (use page_soup)
         rank = j.find(PLAYER_RANK_TAG, class_=PLAYER_RANK_CLASS).text.strip()
 
+        ## extract player's image
+        try:
+            player_image_suburl = player_soup.find(PLAYER_IMAGE_PARENT_TAG, class_=PLAYER_IMAGE_PARENT_CLASS).find(PLAYER_IMAGE_TAG)['src']
+            player_image = PLAYER_BASEURL + player_image_suburl
+        except AttributeError:
+            player_image = None
+
         ## extract player's country
         country = player_info_parent[0].find(PLAYER_INFO_PARENT_TAG, class_=PLAYER_COUNTRY_CLASS).text.strip()
 
@@ -179,7 +188,7 @@ for i in range(17):
         name_code = last_name + ' ' + firstname_abbrev
         
         ## put all the data into the dictionary
-        player_dict[rank] = [last_name, first_name, rank, country, age, height, weight, plays, gear_dict[0], gear_image_dict[0], gear_dict[1], gear_image_dict[1], gear_dict[2], gear_image_dict[2],name_code]
+        player_dict[rank] = [last_name, first_name, player_image, rank, country, age, height, weight, plays, gear_dict[0], gear_image_dict[0], gear_dict[1], gear_image_dict[1], gear_dict[2], gear_image_dict[2],name_code]
 
 ###########################
 #### Load matches data ####
@@ -200,7 +209,8 @@ create_players_sql = '''
     CREATE TABLE IF NOT EXISTS 'Players' (
         'Id' INTEGER PRIMARY KEY AUTOINCREMENT, 
         'LastName' TEXT NOT NULL,
-        'FirstName' TEXT NOT NULL, 
+        'FirstName' TEXT NOT NULL,
+        'PlayerImage' TEXT, 
         'Rank' INTEGER NOT NULL,
         'Country' TEXT NOT NULL,
         'Age' INTEGER,
@@ -240,7 +250,7 @@ conn.commit()
 
 insert_players_sql = '''
     INSERT INTO Players
-    VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
 '''
 
 insert_matches_sql = '''

@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>h2h</title>
+<style>
+	.card {
+  	/* Add shadows to create the "card" effect */
+  	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  	transition: 0.3s;
+	width: 300px;
+	background-color: rgba(241,241,241,1.00);
+	display: block;
+	float: left;
+	margin-left: 20px;
+	}
+
+	/* Add some padding inside the card container */
+	.container {
+  	padding: 2px 16px;
+	}
+	
+	.content {
+	display: flex;
+	flex-direction: column;	
+	}
+	.input{
+		width: 150px;
+	}
+</style>
+</head>
+	
+<body>
+	<h1 style="color:crimson;font-size:80px;">Head2Head</h1>
+    <form action='/h2h_result' method='POST'>
+    <h2 style="font-size:50px;">
+		Please provide two players' full names?</h2>
+		<i style="font-size:30px;">(e.g. Rafael Nadal, Roger Federer)</i><br/>
+		<input name="name1" type="text" size="50"/> player 1<br/><br/>
+		<input name="name2" type="text" size="50"/> player 2<br/><br/>
+		<br/><br/>
+		<div class=content>
+		<div class=criteria>
+		<div class="card">
+  		<div class="container">
+    	<p>
+    	Surface: <br/>
+        <input type='radio' name='surface'
+            value='All' checked='checked'/>All Types<br/>
+        <input type='radio' name='surface'
+            value='Hard'/>Hard<br/>
+		<input type='radio' name='surface'
+            value='Grass'/>Grass<br/>
+		<input type='radio' name='surface'
+            value='Clay'/>Clay<br/>
+    	</p>
+		</div>
+		</div>
+		<div class="card">
+  		<div class="container">
+		<p>
+    	Round: <br/>
+        <input type='radio' name='round'
+            value='All' checked='checked'/>All Rounds<br/>
+        <input type='radio' name='round'
+            value='1st Round'/>1st Round<br/>
+		<input type='radio' name='round'
+            value='2nd Round'/>2nd Round<br/>
+		<input type='radio' name='round'
+            value='3rd Round'/>3rd Round<br/>
+		<input type='radio' name='round'
+            value='4th Round'/>4th Round<br/>
+		<input type='radio' name='round'
+            value='Quarterfinals'/>Quarterfinals<br/>
+		<input type='radio' name='round'
+            value='Semifinals'/>Semifinals<br/>
+		<input type='radio' name='round'
+            value='The Final'/>The Final<br/>
+    	</p>
+		</div>
+		</div>
+		<div class="card">
+  		<div class="container">
+		<p>
+    	Best of: <br/>
+        <input type='radio' name='best'
+            value='All' checked='checked'/>All<br/>
+        <input type='radio' name='best'
+            value='5'/>5<br/>
+		<input type='radio' name='best'
+            value='3'/>3<br/>
+    	</p>
+		</div>
+		</div>
+		</div><br/><br/>
+		<input class="input" type='submit' value='Get Info'/>
+		</div>
+	</form>
+</body>
+</html>

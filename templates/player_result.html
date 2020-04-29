@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>player_result</title>
+<style>
+	table,th,td{border:1px solid black;
+	border-collapse: collapse;
+	padding: 5px;}
+	
+	.gear {
+	display: flex;
+		margin-right: 300px;
+	}
+	
+	.info{
+	margin-right: 30px;
+	}
+	
+	.gear-item{
+	display: inline-block;
+	margin-right: 30px;
+	}
+	
+	.content{
+	display: flex;
+	flex-direction: row;
+	}
+	
+</style>
+</head>
+
+<body>
+	<h1 style="color:crimson;font-size:80px;">{{result[1]}} {{result[2]}}</h1><br/>
+	<div class=content>
+	<div class=info>
+	<img src="{{result[0]}}"/>
+	<table>
+		<tr>
+		<td>Rank</td>
+		<td>{{result[3]}}</td>
+		</tr>
+		<tr>
+		<td>Country</td>
+		<td>{{result[4]}}</td>
+		</tr>
+		<tr>
+		<td>Age</td>
+		<td>{{result[5]}}</td>
+		</tr>
+		<tr>
+		<td>Height</td>
+		<td>{{result[6]}}</td>
+		</tr>
+		<tr>
+		<td>Weight</td>
+		<td>{{result[7]}}</td>
+		</tr>
+		<tr>
+		<td>Plays</td>
+		<td>{{result[8]}}</td>
+		</tr>
+	</table>
+	{% if result[9] != None %}
+	<h3 style="font-size:50px">{{result[1]}} {{result[2]}}'s gear</h3>
+	<div class=gear>
+	<div class=gear-item>
+	<h4>{{result[9]}}</h4>
+	<img src="{{result[10]}}"/>
+	</div>
+	{% endif %}
+	{% if result[11] != None %}
+	<div class=gear-item>
+	<h4>{{result[11]}}</h4>
+	<img src="{{result[12]}}"/>
+	</div>
+	{% endif %}
+	{% if result[13] != None %}
+	<div class=gear-item>
+	<h4>{{result[13]}}</h4>
+	<img src="{{result[14]}}"/>
+	</div>
+	</div>
+	{% endif %}
+	</div>
+	<div class=moreinfo>
+	<form action='/player_result2' method='POST'>
+	<h3 style="font-size:50px">Check his performance in specific year</h3>
+		<p>
+			<input name="name" value="{{result[1]}} {{result[2]}}" type="text" style="display:none"/>
+        <br/>
+        <select name='year'>
+            <option value='2020'>2020</option>
+			<option value='2019'>2019</option>
+			<option value='2018'>2018</option>
+			<option value='2017'>2017</option>
+			<option value='2016'>2016</option>
+			<option value='2015'>2015</option>
+			<option value='2014'>2014</option>
+			<option value='2013'>2013</option>
+			<option value='2012'>2012</option>
+			<option value='2011'>2011</option>
+			<option value='2010'>2010</option>
+			<option value='2009'>2009</option>
+			<option value='2008'>2008</option>
+			<option value='2007'>2007</option>
+			<option value='2006'>2006</option>
+			<option value='2005'>2005</option>
+			<option value='2004'>2004</option>
+			<option value='2003'>2003</option>
+			<option value='2002'>2002</option>
+			<option value='2001'>2001</option>
+			<option value='2000'>2000</option>
+        </select>
+    	</p><br/><br/>
+		<input type='submit' value='Check it out'/>
+		</form>
+	</div>
+	</div>
+</body>
+</html>
